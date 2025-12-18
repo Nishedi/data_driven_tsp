@@ -26,17 +26,17 @@ class ParameterPredictorNN(nn.Module):
         self.network = nn.Sequential(
             nn.Linear(input_size, hidden_size),
             nn.ReLU(),
-            nn.BatchNorm1d(hidden_size),
+            nn.LayerNorm(hidden_size),
             nn.Dropout(0.2),
             
             nn.Linear(hidden_size, hidden_size),
             nn.ReLU(),
-            nn.BatchNorm1d(hidden_size),
+            nn.LayerNorm(hidden_size),
             nn.Dropout(0.2),
             
             nn.Linear(hidden_size, hidden_size // 2),
             nn.ReLU(),
-            nn.BatchNorm1d(hidden_size // 2),
+            nn.LayerNorm(hidden_size // 2),
             
             nn.Linear(hidden_size // 2, 4)  # 4 parameters: temp, cooling, min_temp, iterations
         )
@@ -57,14 +57,7 @@ class ParameterPredictorNN(nn.Module):
         Returns:
             Predicted parameters [initial_temp, cooling_rate, min_temp, iterations_per_temp]
         """
-        # Set model to eval mode for batch size 1 to avoid BatchNorm issues
-        is_single_sample = x.size(0) == 1
-        if is_single_sample and self.training:
-            self.eval()
-            output = self.network(x)
-            self.train()
-        else:
-            output = self.network(x)
+        output = self.network(x)
         
         # Apply specific activations and scaling to each parameter
         initial_temp = self.temp_activation(output[:, 0:1]) * 100 + 10  # Range: [10, ~110]
@@ -187,6 +180,8 @@ class ParameterPredictor:
         if not os.path.exists(self.model_path):
             raise FileNotFoundError(f"Model file not found: {self.model_path}")
         
+        # Note: weights_only=False is required because we save numpy arrays (scaler_mean, scaler_std)
+        # in the checkpoint along with model weights. This is safe as we control the checkpoint file.
         checkpoint = torch.load(self.model_path, map_location=self.device, weights_only=False)
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.scaler_mean = checkpoint['scaler_mean']

@@ -22,13 +22,9 @@ class TSPInstance:
     
     def _compute_distance_matrix(self) -> np.ndarray:
         """Compute pairwise distances between all cities."""
-        n = self.n_cities
-        distances = np.zeros((n, n))
-        for i in range(n):
-            for j in range(i + 1, n):
-                dist = np.linalg.norm(self.cities[i] - self.cities[j])
-                distances[i, j] = dist
-                distances[j, i] = dist
+        # Use broadcasting for vectorized distance computation
+        diff = self.cities[:, np.newaxis, :] - self.cities[np.newaxis, :, :]
+        distances = np.sqrt(np.sum(diff**2, axis=2))
         return distances
     
     def tour_length(self, tour: List[int]) -> float:
