@@ -241,6 +241,8 @@ def main():
     
     parser.add_argument('--train', action='store_true',
                         help='Train the neural network model')
+    parser.add_argument('--train-24h', action='store_true',
+                        help='Train model for 24 hours on random instances (see train_24h.py)')
     parser.add_argument('--solve', action='store_true',
                         help='Solve a TSP instance')
     parser.add_argument('--compare', action='store_true',
@@ -256,7 +258,11 @@ def main():
     
     args = parser.parse_args()
     
-    if args.train:
+    if args.train_24h:
+        print("For 24-hour training, please use the train_24h.py script:")
+        print("  python train_24h.py --duration 24.0")
+        print("\nSee 'python train_24h.py --help' for more options.")
+    elif args.train:
         train_model(n_instances=args.instances, epochs=args.epochs)
     elif args.compare:
         compare_methods(n_cities=args.cities, n_runs=5)

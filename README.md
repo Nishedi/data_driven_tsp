@@ -72,6 +72,42 @@ Parameters:
 - `--instances`: Number of TSP instances for training data (default: 200)
 - `--epochs`: Number of training epochs (default: 100)
 
+### 24-Hour Continuous Training (Advanced)
+
+For production-quality models, train continuously on randomly generated instances:
+
+```bash
+python train_24h.py --duration 24.0
+```
+
+This will:
+- Train for 24 hours (or specified duration) on random TSP instances
+- Generate instances with varying sizes (10-550 cities by default)
+- Evaluate multiple parameter configurations for each instance
+- Save model checkpoints every hour
+- Resume from existing checkpoints if interrupted
+
+Parameters:
+- `--duration`: Training duration in hours (default: 24.0)
+- `--model-path`: Path to save model (default: parameter_model_24h.pth)
+- `--checkpoint-interval`: Save every N minutes (default: 60)
+- `--min-cities`: Minimum cities in instances (default: 10)
+- `--max-cities`: Maximum cities in instances (default: 550)
+- `--param-configs`: Parameter configs to test per instance (default: 15)
+- `--batch-size`: Training batch size (default: 50)
+- `--epochs`: Epochs per batch (default: 20)
+
+Example for shorter test run:
+```bash
+python train_24h.py --duration 0.5 --max-cities 100
+```
+
+After training, use the model:
+```bash
+python main.py --solve --cities 100
+```
+(Update model path in code to use parameter_model_24h.pth)
+
 ### Solve a TSP Instance
 
 Solve a TSP instance using NN-predicted parameters:
