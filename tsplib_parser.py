@@ -8,6 +8,8 @@ Supports reading .tsp files in TSPLIB format with various specifications:
 """
 import numpy as np
 import math
+import os
+import urllib.request
 from typing import Optional, Tuple
 from tsp_solver import TSPInstance
 
@@ -82,7 +84,8 @@ def _parse_coord_section(lines: list, dimension: int, name: str) -> TSPInstance:
 def _parse_edge_weight_section(lines: list, dimension: int, name: str) -> TSPInstance:
     """
     Parse EDGE_WEIGHT_SECTION for explicit distance matrix.
-    Note: This creates synthetic coordinates for visualization purposes.
+    Note: This creates approximate coordinates using MDS for visualization.
+    The actual distances from the matrix are used for solving.
     """
     distances = []
     
@@ -113,9 +116,23 @@ def _parse_edge_weight_section(lines: list, dimension: int, name: str) -> TSPIns
     else:
         raise ValueError(f"Unexpected number of distances: {len(distances)}")
     
-    # Create synthetic coordinates using MDS-like approach for visualization
-    # For now, use random coordinates - the distance matrix is what matters
-    cities = np.random.rand(dimension, 2) * 100
+    # Use simple MDS-like approach to generate approximate coordinates
+    # This gives better visualization than random coordinates
+    try:
+        from sklearn.manifold import MDS
+        mds = MDS(n_components=2, dissimilarity='precomputed', random_state=42)
+        cities = mds.fit_transform(distance_matrix)
+    except ImportError:
+        # Fallback to simple approach if sklearn not available
+        # Use first two eigenvectors of centered distance matrix
+        n = distance_matrix.shape[0]
+        D_squared = distance_matrix ** 2
+        H = np.eye(n) - np.ones((n, n)) / n
+        B = -0.5 * H @ D_squared @ H
+        eigenvalues, eigenvectors = np.linalg.eigh(B)
+        # Take the two largest eigenvalues
+        idx = eigenvalues.argsort()[-2:][::-1]
+        cities = eigenvectors[:, idx] * np.sqrt(eigenvalues[idx])
     
     instance = TSPInstance(cities)
     instance.distance_matrix = distance_matrix  # Override with explicit distances
@@ -131,8 +148,6 @@ def download_tsplib_instance(url: str, filepath: str):
         url: URL to the .tsp file
         filepath: Local path to save the file
     """
-    import urllib.request
-    
     print(f"Downloading {url}...")
     try:
         urllib.request.urlretrieve(url, filepath)
@@ -147,8 +162,6 @@ def create_sample_tsplib_instances():
     Create some sample TSPLIB-format files for testing.
     These are small instances suitable for quick testing.
     """
-    import os
-    
     # Create a directory for benchmark instances
     os.makedirs('tsplib_instances', exist_ok=True)
     

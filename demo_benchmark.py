@@ -9,12 +9,24 @@ This script:
 """
 import os
 import sys
+import subprocess
 
 
 def print_section(title):
     print("\n" + "=" * 70)
     print(f"  {title}")
     print("=" * 70 + "\n")
+
+
+def run_command(cmd):
+    """Run a command and handle errors."""
+    try:
+        result = subprocess.run(cmd, shell=True, check=True, capture_output=False)
+        return result.returncode == 0
+    except subprocess.CalledProcessError as e:
+        print(f"Error running command: {cmd}")
+        print(f"Exit code: {e.returncode}")
+        return False
 
 
 def main():
@@ -31,7 +43,9 @@ def main():
         print("Using 200 instances and 100 epochs for quality results.\n")
         print("Note: This may take a few minutes.\n")
         
-        os.system('python main.py --train --instances 200 --epochs 100')
+        if not run_command('python main.py --train --instances 200 --epochs 100'):
+            print("Training failed. Please check the error messages above.")
+            return 1
     else:
         print("Model already trained. Skipping training step.\n")
     
@@ -39,7 +53,9 @@ def main():
     print("Testing on standard TSPLIB benchmark instances...")
     print("Running 10 trials per instance for statistical significance.\n")
     
-    os.system('python benchmark_comparison.py --runs 10')
+    if not run_command('python benchmark_comparison.py --runs 10'):
+        print("Benchmark failed. Please check the error messages above.")
+        return 1
     
     print_section("DEMONSTRATION COMPLETE")
     print("Results have been saved to:")
@@ -58,7 +74,9 @@ def main():
     print("  - Number of cities")
     print("  - Distance distribution (mean, std dev, range)")
     print("  - Spatial characteristics (spread of cities)")
+    
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

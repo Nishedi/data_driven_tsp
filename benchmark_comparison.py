@@ -15,7 +15,13 @@ from typing import List, Dict, Tuple
 from tsp_solver import TSPInstance, SimulatedAnnealingSolver
 from neural_network import ParameterPredictor
 from tsplib_parser import parse_tsplib_file, create_sample_tsplib_instances
-import matplotlib.pyplot as plt
+
+try:
+    import matplotlib.pyplot as plt
+except ImportError as e:
+    print("Error: matplotlib is required for visualization.")
+    print("Please install it using: pip install matplotlib")
+    raise
 
 
 def run_benchmark(
@@ -185,7 +191,19 @@ def run_full_benchmark_suite(
     # Load predictor
     print("\nLoading trained model...")
     predictor = ParameterPredictor(model_path='parameter_model.pth')
-    predictor.load()
+    try:
+        predictor.load()
+    except FileNotFoundError:
+        print("\nError: Model file not found at 'parameter_model.pth'")
+        print("Please train the model first using:")
+        print("  python main.py --train --instances 200 --epochs 100")
+        return
+    except Exception as e:
+        print(f"\nError loading model: {e}")
+        print("The model file may be corrupted or incompatible.")
+        print("Please retrain the model using:")
+        print("  python main.py --train --instances 200 --epochs 100")
+        return
     
     # Find all .tsp files
     if not os.path.exists(instance_dir):
