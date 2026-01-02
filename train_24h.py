@@ -89,7 +89,8 @@ def train_model_24h(
     max_cities: int = 550,
     n_param_configs: int = 15,
     batch_training_size: int = 50,
-    epochs_per_batch: int = 20
+    epochs_per_batch: int = 20,
+    learning_rate: float = 0.001
 ):
     """
     Train the model continuously for a specified duration on random TSP instances.
@@ -107,6 +108,7 @@ def train_model_24h(
         n_param_configs: Number of parameter configurations to evaluate per instance
         batch_training_size: Number of instances to collect before retraining
         epochs_per_batch: Number of epochs to train on each batch
+        learning_rate: Learning rate for training (default: 0.001)
     """
     print("=" * 80)
     print(f"STARTING 24-HOUR TRAINING SESSION")
@@ -117,6 +119,7 @@ def train_model_24h(
     print(f"Checkpoint interval: {checkpoint_interval_minutes} minutes")
     print(f"Batch size: {batch_training_size} instances")
     print(f"Epochs per batch: {epochs_per_batch}")
+    print(f"Learning rate: {learning_rate}")
     print("=" * 80)
     print()
     
@@ -200,7 +203,7 @@ def train_model_24h(
                 all_params,
                 epochs=epochs_per_batch,
                 batch_size=min(32, len(all_features)),
-                learning_rate=0.001
+                learning_rate=learning_rate
             )
             
             print(f"Total training samples: {len(all_features)}")
@@ -232,7 +235,7 @@ def train_model_24h(
                     all_params,
                     epochs=epochs_per_batch,
                     batch_size=min(32, len(all_features)),
-                    learning_rate=0.001
+                    learning_rate=learning_rate
                 )
                 
                 batch_features = []
@@ -266,7 +269,7 @@ def train_model_24h(
             all_params,
             epochs=epochs_per_batch * 2,  # Extra epochs for final training
             batch_size=min(32, len(all_features)),
-            learning_rate=0.001
+            learning_rate=learning_rate
         )
     
     # Final save
@@ -310,6 +313,8 @@ def main():
                        help='Batch size for training (default: 50)')
     parser.add_argument('--epochs', type=int, default=20,
                        help='Epochs per batch (default: 20)')
+    parser.add_argument('--learning-rate', type=float, default=0.001,
+                       help='Learning rate for training (default: 0.001)')
     
     args = parser.parse_args()
     
@@ -335,7 +340,8 @@ def main():
         max_cities=args.max_cities,
         n_param_configs=args.param_configs,
         batch_training_size=args.batch_size,
-        epochs_per_batch=args.epochs
+        epochs_per_batch=args.epochs,
+        learning_rate=args.learning_rate
     )
 
 
