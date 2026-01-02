@@ -123,8 +123,14 @@ def _parse_edge_weight_section(lines: list, dimension: int, name: str) -> TSPIns
         mds = MDS(n_components=2, dissimilarity='precomputed', random_state=42)
         cities = mds.fit_transform(distance_matrix)
     except ImportError:
-        # Fallback to simple approach if sklearn not available
-        # Use first two eigenvectors of centered distance matrix
+        # Fallback: Classical MDS (multidimensional scaling) implementation
+        # This creates approximate 2D coordinates from the distance matrix
+        # Algorithm steps:
+        # 1. Square the distance matrix: D^2
+        # 2. Create centering matrix: H = I - (1/n)J where J is all ones
+        # 3. Compute B = -0.5 * H * D^2 * H (double-centered matrix)
+        # 4. Eigen decomposition of B
+        # 5. Take coordinates as eigenvectors * sqrt(eigenvalues) for top 2 eigenvalues
         n = distance_matrix.shape[0]
         D_squared = distance_matrix ** 2
         H = np.eye(n) - np.ones((n, n)) / n
