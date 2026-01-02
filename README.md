@@ -111,6 +111,16 @@ Parameters:
 - `--runs`: Number of runs per instance (default: 10)
 - `--single`: Path to a single TSPLIB file to test
 
+### Complete Benchmark Demo
+
+Run the complete demonstration (trains model and runs benchmarks):
+
+```bash
+python demo_benchmark.py
+```
+
+This script will train the model (if needed) and run comprehensive benchmarks on TSPLIB instances.
+
 ## How It Works
 
 ### 1. Problem Representation
@@ -205,10 +215,21 @@ Features extracted from each TSP instance:
 
 ## Performance
 
-The neural network-based parameter selection typically achieves:
-- **Better solution quality**: 5-15% improvement over default parameters
+The neural network-based parameter selection can achieve:
+- **Improved solution quality**: On well-trained models (with sufficient training instances), typically 5-15% improvement over default parameters
 - **More consistent results**: Lower variance across multiple runs
 - **Adaptive behavior**: Parameters automatically adjust to problem characteristics
+- **Faster execution**: Adapted parameters often converge faster than default fixed parameters
+
+### Benchmark Comparison
+
+The benchmark comparison tool (`benchmark_comparison.py`) provides comprehensive evaluation on TSPLIB instances:
+- Runs both NN-based and default parameter approaches multiple times
+- Generates detailed statistics (mean, best, worst, standard deviation)
+- Creates visualization plots showing comparisons
+- Saves results to text file for analysis
+
+**Note**: The quality of NN-based results depends on the training. A model trained on only 50-100 instances may not outperform default parameters. For best results, train with 200+ instances and 100+ epochs.
 
 ## Requirements
 
