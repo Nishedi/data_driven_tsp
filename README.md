@@ -86,6 +86,31 @@ python main.py --compare --cities 25
 
 This runs both methods multiple times and reports statistics.
 
+### Benchmark on TSPLIB Instances
+
+Compare the performance on standard TSPLIB benchmark instances:
+
+```bash
+python benchmark_comparison.py
+```
+
+This will:
+1. Load or create sample TSPLIB instances
+2. Run both NN-based and default parameter approaches
+3. Generate detailed statistics and visualizations
+4. Save results to `benchmark_results.txt` and `benchmark_comparison.png`
+
+You can also test on a single TSPLIB file:
+
+```bash
+python benchmark_comparison.py --single tsplib_instances/berlin20.tsp --runs 10
+```
+
+Parameters:
+- `--instance-dir`: Directory containing TSPLIB .tsp files (default: tsplib_instances)
+- `--runs`: Number of runs per instance (default: 10)
+- `--single`: Path to a single TSPLIB file to test
+
 ## How It Works
 
 ### 1. Problem Representation
