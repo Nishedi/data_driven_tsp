@@ -18,10 +18,10 @@ from tsplib_parser import parse_tsplib_file, create_sample_tsplib_instances
 
 try:
     import matplotlib.pyplot as plt
-except ImportError as e:
+except ImportError:
     print("Error: matplotlib is required for visualization.")
     print("Please install it using: pip install matplotlib")
-    raise
+    raise ImportError("matplotlib is required but not installed")
 
 
 def run_benchmark(
@@ -315,6 +315,7 @@ def visualize_benchmark_results(all_results: List[Dict], summary_data: List[Dict
     ax2.set_xlabel('Instance')
     ax2.set_ylabel('Improvement (%)')
     ax2.set_title('Performance Improvement (NN vs Default)')
+    ax2.set_xticks(range(len(instances)))
     ax2.set_xticklabels(instances, rotation=45, ha='right')
     ax2.grid(True, alpha=0.3)
     

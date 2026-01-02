@@ -130,9 +130,10 @@ def _parse_edge_weight_section(lines: list, dimension: int, name: str) -> TSPIns
         H = np.eye(n) - np.ones((n, n)) / n
         B = -0.5 * H @ D_squared @ H
         eigenvalues, eigenvectors = np.linalg.eigh(B)
-        # Take the two largest eigenvalues
+        # Take the two largest eigenvalues (ensure they are positive)
         idx = eigenvalues.argsort()[-2:][::-1]
-        cities = eigenvectors[:, idx] * np.sqrt(eigenvalues[idx])
+        selected_eigenvalues = np.maximum(eigenvalues[idx], 0)  # Ensure non-negative
+        cities = eigenvectors[:, idx] * np.sqrt(selected_eigenvalues)
     
     instance = TSPInstance(cities)
     instance.distance_matrix = distance_matrix  # Override with explicit distances
