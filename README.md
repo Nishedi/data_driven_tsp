@@ -14,6 +14,8 @@ This project implements a TSP solver using Simulated Annealing (SA) metaheuristi
 - **Training Data Generation**: Automated generation of training data from various TSP instances
 - **Visualization**: Solution visualization with matplotlib
 - **Comparison Mode**: Compare NN-based vs default parameters
+- **TSPLIB Support**: Parser for standard TSPLIB benchmark files
+- **Benchmark Comparison**: Comprehensive evaluation on benchmark instances
 
 ## Project Structure
 
@@ -23,7 +25,15 @@ data_driven_tsp/
 ├── tsp_solver.py              # TSP representation and SA solver
 ├── neural_network.py          # Neural network for parameter prediction
 ├── generate_training_data.py  # Training data generation
+├── tsplib_parser.py           # TSPLIB format parser
+├── benchmark_comparison.py    # Benchmark comparison tool
+├── demo_benchmark.py          # Complete benchmark demonstration
+├── test_benchmark.py          # Automated tests
 ├── requirements.txt           # Python dependencies
+├── tsplib_instances/          # Sample TSPLIB benchmark files
+│   ├── berlin20.tsp          # 20-city instance
+│   ├── simple10.tsp          # 10-city instance
+│   └── random30.tsp          # 30-city instance
 └── README.md                  # This file
 ```
 
@@ -85,6 +95,41 @@ python main.py --compare --cities 25
 ```
 
 This runs both methods multiple times and reports statistics.
+
+### Benchmark on TSPLIB Instances
+
+Compare the performance on standard TSPLIB benchmark instances:
+
+```bash
+python benchmark_comparison.py
+```
+
+This will:
+1. Load or create sample TSPLIB instances
+2. Run both NN-based and default parameter approaches
+3. Generate detailed statistics and visualizations
+4. Save results to `benchmark_results.txt` and `benchmark_comparison.png`
+
+You can also test on a single TSPLIB file:
+
+```bash
+python benchmark_comparison.py --single tsplib_instances/berlin20.tsp --runs 10
+```
+
+Parameters:
+- `--instance-dir`: Directory containing TSPLIB .tsp files (default: tsplib_instances)
+- `--runs`: Number of runs per instance (default: 10)
+- `--single`: Path to a single TSPLIB file to test
+
+### Complete Benchmark Demo
+
+Run the complete demonstration (trains model and runs benchmarks):
+
+```bash
+python demo_benchmark.py
+```
+
+This script will train the model (if needed) and run comprehensive benchmarks on TSPLIB instances.
 
 ## How It Works
 
@@ -180,10 +225,21 @@ Features extracted from each TSP instance:
 
 ## Performance
 
-The neural network-based parameter selection typically achieves:
-- **Better solution quality**: 5-15% improvement over default parameters
+The neural network-based parameter selection can achieve:
+- **Improved solution quality**: On well-trained models (with sufficient training instances), typically 5-15% improvement over default parameters
 - **More consistent results**: Lower variance across multiple runs
 - **Adaptive behavior**: Parameters automatically adjust to problem characteristics
+- **Faster execution**: Adapted parameters often converge faster than default fixed parameters
+
+### Benchmark Comparison
+
+The benchmark comparison tool (`benchmark_comparison.py`) provides comprehensive evaluation on TSPLIB instances:
+- Runs both NN-based and default parameter approaches multiple times
+- Generates detailed statistics (mean, best, worst, standard deviation)
+- Creates visualization plots showing comparisons
+- Saves results to text file for analysis
+
+**Note**: The quality of NN-based results depends on the training. A model trained on only 50-100 instances may not outperform default parameters. For best results, train with 200+ instances and 100+ epochs.
 
 ## Requirements
 
