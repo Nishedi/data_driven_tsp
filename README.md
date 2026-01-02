@@ -14,6 +14,8 @@ This project implements a TSP solver using Simulated Annealing (SA) metaheuristi
 - **Training Data Generation**: Automated generation of training data from various TSP instances
 - **Visualization**: Solution visualization with matplotlib
 - **Comparison Mode**: Compare NN-based vs default parameters
+- **TSPLIB Support**: Parser for standard TSPLIB benchmark files
+- **Benchmark Comparison**: Comprehensive evaluation on benchmark instances
 
 ## Project Structure
 
@@ -23,7 +25,15 @@ data_driven_tsp/
 ├── tsp_solver.py              # TSP representation and SA solver
 ├── neural_network.py          # Neural network for parameter prediction
 ├── generate_training_data.py  # Training data generation
+├── tsplib_parser.py           # TSPLIB format parser
+├── benchmark_comparison.py    # Benchmark comparison tool
+├── demo_benchmark.py          # Complete benchmark demonstration
+├── test_benchmark.py          # Automated tests
 ├── requirements.txt           # Python dependencies
+├── tsplib_instances/          # Sample TSPLIB benchmark files
+│   ├── berlin20.tsp          # 20-city instance
+│   ├── simple10.tsp          # 10-city instance
+│   └── random30.tsp          # 30-city instance
 └── README.md                  # This file
 ```
 
