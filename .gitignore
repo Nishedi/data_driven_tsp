@@ -40,6 +40,8 @@ env/
 # Training data
 training_features.npy
 training_params.npy
+training_features_24h.npy
+training_params_24h.npy
 
 # Output files
 *.png
