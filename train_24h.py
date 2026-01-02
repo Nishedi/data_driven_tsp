@@ -101,13 +101,13 @@ def train_model_24h(
     
     Args:
         duration_hours: Training duration in hours (default: 24.0)
-        model_path: Path to save the model
-        checkpoint_interval_minutes: Save model every N minutes
-        min_cities: Minimum number of cities in generated instances
-        max_cities: Maximum number of cities in generated instances
-        n_param_configs: Number of parameter configurations to evaluate per instance
-        batch_training_size: Number of instances to collect before retraining
-        epochs_per_batch: Number of epochs to train on each batch
+        model_path: Path to save the model (default: 'parameter_model_24h.pth')
+        checkpoint_interval_minutes: Save model every N minutes (default: 60)
+        min_cities: Minimum number of cities in generated instances (default: 10)
+        max_cities: Maximum number of cities in generated instances (default: 550)
+        n_param_configs: Number of parameter configurations to evaluate per instance (default: 15)
+        batch_training_size: Number of instances to collect before retraining (default: 50)
+        epochs_per_batch: Number of epochs to train on each batch (default: 20)
         learning_rate: Learning rate for training (default: 0.001)
     """
     print("=" * 80)
