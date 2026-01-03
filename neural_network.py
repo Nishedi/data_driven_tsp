@@ -61,7 +61,7 @@ class ParameterPredictorNN(nn.Module):
         
         # Apply specific activations and scaling to each parameter
         initial_temp = self.temp_activation(output[:, 0:1]) * 100 + 10  # Range: [10, ~110]
-        cooling_rate = self.cooling_activation(output[:, 1:2]) * 0.1 + 0.9  # Range: [0.9, 1.0]
+        cooling_rate = self.cooling_activation(output[:, 1:2]) * 0.049 + 0.95  # Range: [0.95, 0.999]
         min_temp = self.min_temp_activation(output[:, 2:3]) * 0.1  # Range: [0, ~0.1]
         iterations = self.iterations_activation(output[:, 3:4]) * 200 + 50  # Range: [50, ~250]
         

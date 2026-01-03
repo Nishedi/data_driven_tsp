@@ -74,7 +74,7 @@ def generate_random_param_configs(n_configs: int = 15) -> List[Tuple[float, floa
     configs = []
     for _ in range(n_configs):
         initial_temp = np.random.uniform(20, 200)
-        cooling_rate = np.random.uniform(0.90, 0.999)
+        cooling_rate = np.random.uniform(0.95, 0.999)  # Higher cooling rates for slower, better convergence
         min_temp = np.random.uniform(0.001, 0.1)
         iterations_per_temp = np.random.uniform(50, 300)
         configs.append((initial_temp, cooling_rate, min_temp, iterations_per_temp))
