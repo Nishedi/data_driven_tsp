@@ -78,7 +78,7 @@ def generate_training_data(
         param_configs = []
         for _ in range(n_param_configs):
             initial_temp = np.random.uniform(20, 200)
-            cooling_rate = np.random.uniform(0.90, 0.999)
+            cooling_rate = np.random.uniform(0.95, 0.999)  # Higher cooling rates for slower, better convergence
             min_temp = np.random.uniform(0.001, 0.1)
             iterations_per_temp = np.random.uniform(50, 300)
             param_configs.append((initial_temp, cooling_rate, min_temp, iterations_per_temp))
@@ -132,7 +132,7 @@ def quick_generate_training_data(n_instances: int = 100) -> Tuple[List[np.ndarra
         # Heuristic: larger/more complex problems need more iterations and higher initial temp
         # This is a simplified heuristic for quick data generation
         initial_temp = 50 + features[0] * 2  # Based on number of cities
-        cooling_rate = 0.95 + (1 - features[0] / 100) * 0.04  # Slower cooling for larger problems
+        cooling_rate = 0.95 + (1 - features[0] / 100) * 0.049  # Slower cooling for larger problems (range: 0.95-0.999)
         min_temp = 0.01
         iterations_per_temp = 100 + int(features[0] * 2)  # More iterations for larger problems
         
